@@ -1,4 +1,5 @@
 const User = require('../models/User')
+const Property = require('../models/Property')
 const bcrypt = require('bcryptjs')
 const { createError } = require('../utils/error')
 const jwt = require("jsonwebtoken");
@@ -92,6 +93,23 @@ exports.updateMe = async (req, res, next) => {
         res.status(200).json({
             user
         })
+    } catch (error) {
+        next(error)
+    }
+}
+
+exports.getMyProperties = async (req, res, next) => {
+    try {
+        const userId = req.user.id
+
+        console.log(userId)
+
+        const property = await Property.find({ user: userId })
+
+        res.status(200).json({
+            success: true,
+            property
+        });
     } catch (error) {
         next(error)
     }

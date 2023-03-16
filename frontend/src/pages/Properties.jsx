@@ -1,5 +1,5 @@
 import { Row, Col, Container } from "react-bootstrap";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Box from "@mui/material/Box";
 import Slider from "@mui/material/Slider";
 import FormGroup from "@mui/material/FormGroup";
@@ -16,6 +16,13 @@ import InputBase from "@mui/material/InputBase";
 import IconButton from "@mui/material/IconButton";
 import SearchIcon from "@mui/icons-material/Search";
 import PropertyItem from "../components/utils/PropertyItem";
+import {
+  getAllProperties,
+  reset,
+  getFilteredProperties,
+} from "../features/propertySlice";
+import { useSelector, useDispatch } from "react-redux";
+import { toast } from "react-hot-toast";
 import r1 from "../photos/r1.jpg";
 import r2 from "../photos/r2.jpg";
 import r3 from "../photos/r3.jpg";
@@ -24,6 +31,7 @@ import r5 from "../photos/r5.jpg";
 import r6 from "../photos/r6.jpg";
 import r7 from "../photos/r7.jpg";
 import r8 from "../photos/r8.jpg";
+import Spinner from "../components/utils/Spinner";
 
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
@@ -45,10 +53,37 @@ const types = [
 ];
 
 function Properties() {
-  const [value, setValue] = useState([35000, 320000]);
+  const [value, setValue] = useState([0, 320000]);
   const [homeType, setHomeType] = useState([]);
   const [categoryType, setCategoryType] = useState([]);
-  const [date, setDate] = useState("");
+  const [beds, setBeds] = useState([]);
+  const [baths, setBaths] = useState([]);
+  const [city, setCity] = useState([]);
+  const [search, setSearch] = useState("");
+
+  const setStateValues = () => {
+    setHomeType([]);
+    setCategoryType([]);
+    setBeds([]);
+    setBaths([]);
+    setCity([]);
+    setSearch("");
+  };
+
+  const { property, isError, isLoading } = useSelector(
+    (state) => state.property
+  );
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    if (isError) {
+      toast.error("Can't load properties");
+    }
+
+    dispatch(getAllProperties());
+
+    dispatch(reset());
+  }, [isError, dispatch]);
 
   const handleChange = (event) => {
     const {
@@ -72,11 +107,71 @@ function Properties() {
     );
   };
 
-  const handleChangeSlider = (event, newValue) => {
+  const handleCityChange = (event) => {
+    if (typeof event === "string") {
+      if (!city.includes(event)) {
+        setCity([...city, event]); // Update arr using setArr()
+      } else {
+        // Remove the name from the array if it's in there
+        setCity(city.filter((item) => item !== event));
+      }
+    } else {
+      const {
+        target: { name },
+      } = event;
+      if (!city.includes(name)) {
+        setCity([...city, name]); // Update arr using setArr()
+      } else {
+        // Remove the name from the array if it's in there
+        setCity(city.filter((item) => item !== name));
+      }
+    }
+  };
+
+  const handleChangeSlider = (e, newValue) => {
     setValue(newValue);
   };
-  const handleDateChange = (event) => {
-    setDate(event.target.value);
+  const handleBedChange = (e) => {
+    const {
+      target: { name },
+    } = e;
+
+    if (!beds.includes(name)) {
+      setBeds([...beds, name]); // Update arr using setArr()
+    } else {
+      // Remove the name from the array if it's in there
+      setBeds(beds.filter((item) => item !== name));
+    }
+  };
+  const handleBathChange = (e) => {
+    const {
+      target: { name },
+    } = e;
+
+    if (!baths.includes(name)) {
+      setBaths([...baths, name]); // Update arr using setArr()
+    } else {
+      // Remove the name from the array if it's in there
+      setBaths(baths.filter((item) => item !== name));
+    }
+  };
+
+  const onApplyChanges = () => {
+    const url = `bed=${beds.length >= 1 ? beds : "empty"}&bath=${
+      baths.length >= 1 ? baths : "empty"
+    }&cities=${city.length >= 1 ? city : "empty"}&city=${
+      search.length >= 1 ? search : "empty"
+    }&categories=${categoryType.length >= 1 ? categoryType : "empty"}&homes=${
+      homeType.length >= 1 ? homeType : "empty"
+    }&price=${value.length >= 1 ? value : "empty"}`;
+    dispatch(getFilteredProperties(url));
+
+    setStateValues();
+    console.log(url);
+  };
+
+  const searchByLocation = () => {
+    onApplyChanges();
   };
 
   const citiesList = [
@@ -92,88 +187,10 @@ function Properties() {
 
   const categoryList = ["For Sale", "For Rent", "Holiday Rent"];
   const roomsArr = ["1-3", "3-6", "6+"];
-  const data = [
-    {
-      id: 1,
-      image: r1,
-      price: "75,000",
-      title: "Luxy House Brand new",
-      bedroom: 4,
-      bathroom: 3,
-      type: "House",
-      categorie: "For Rent",
-    },
-    {
-      id: 2,
-      image: r2,
-      price: "195,000",
-      title: "The Awani Residence 3",
-      bedroom: 6,
-      bathroom: 4,
-      type: "Villa",
-      categorie: "For Sale",
-    },
-    {
-      id: 3,
-      image: r3,
-      price: "65,000",
-      title: "Gold Coast Sea View",
-      bedroom: 6,
-      bathroom: 5,
-      type: "Apartment",
-      categorie: "For Sale",
-    },
-    {
-      id: 4,
-      image: r4,
-      price: "45,000",
-      title: "CitraLand BSB City Center",
-      bedroom: 3,
-      bathroom: 1,
-      type: "Apartment",
-      categorie: "For Sale",
-    },
-    {
-      id: 5,
-      image: r5,
-      price: "80,000",
-      title: "AURORA Bukit Rancamayan",
-      bedroom: 3,
-      bathroom: 2,
-      type: "House",
-      categorie: "For Rent",
-    },
-    {
-      id: 6,
-      image: r6,
-      price: "60,000",
-      title: "Cluster Persada 3",
-      bedroom: 3,
-      bathroom: 1,
-      type: "House",
-      categorie: "For Sale",
-    },
-    {
-      id: 7,
-      image: r7,
-      price: "50,000",
-      title: "Amartha Residence, Jaya...",
-      bedroom: 3,
-      bathroom: 2,
-      type: "House",
-      categorie: "For Rent",
-    },
-    {
-      id: 8,
-      image: r8,
-      price: "49,000",
-      title: "Citiland Cibur Cillenguse",
-      bedroom: 4,
-      bathroom: 2,
-      type: "House",
-      categorie: "For Sale",
-    },
-  ];
+
+  if (isLoading || !property || property === undefined || property === null) {
+    return <Spinner />;
+  }
 
   return (
     <section id="all-properties" className="mb-6">
@@ -194,34 +211,18 @@ function Properties() {
                   sx={{ ml: 1, flex: 1 }}
                   placeholder="Search by location"
                   inputProps={{ "aria-label": "search google maps" }}
+                  value={search}
+                  onChange={(e) => setSearch(e.target.value)}
                 />
                 <IconButton
                   type="button"
                   sx={{ p: "10px" }}
                   aria-label="search"
+                  onClick={searchByLocation}
                 >
                   <SearchIcon />
                 </IconButton>
               </Paper>
-              <div className="order">
-                <Box sx={{ minWidth: 120 }}>
-                  <FormControl fullWidth>
-                    <InputLabel id="demo-simple-select-label">Order</InputLabel>
-                    <Select
-                      labelId="demo-simple-select-label"
-                      id="demo-simple-select"
-                      value={date}
-                      label="Set Order"
-                      onChange={handleDateChange}
-                    >
-                      <MenuItem value={10}>Price Low to High</MenuItem>
-                      <MenuItem value={20}>Price High to Low</MenuItem>
-                      <MenuItem value={30}>Date Old to New</MenuItem>
-                      <MenuItem value={30}>Date New to Old</MenuItem>
-                    </Select>
-                  </FormControl>
-                </Box>
-              </div>
             </div>
             <div className="filter-items">
               <h3>Filter</h3>
@@ -251,8 +252,10 @@ function Properties() {
                     {citiesList.map((city, i) => (
                       <FormControlLabel
                         key={i}
-                        control={<Checkbox defaultChecked />}
+                        control={<Checkbox />}
                         label={city}
+                        name={city}
+                        onChange={handleCityChange}
                       />
                     ))}
                   </FormGroup>
@@ -321,8 +324,12 @@ function Properties() {
                   <FormGroup className="form-item">
                     {roomsArr.map((room, i) => (
                       <FormControlLabel
+                        onChange={handleBedChange}
+                        value={beds}
+                        name={room}
                         key={i}
-                        control={<Checkbox defaultChecked />}
+                        id="bedrooms"
+                        control={<Checkbox />}
                         label={room}
                       />
                     ))}
@@ -336,20 +343,28 @@ function Properties() {
                     {roomsArr.map((room, i) => (
                       <FormControlLabel
                         key={i}
-                        control={<Checkbox defaultChecked />}
+                        onChange={handleBathChange}
+                        name={room}
+                        id="bathrooms"
+                        control={<Checkbox />}
                         label={room}
                       />
                     ))}
                   </FormGroup>
                 </div>
               </div>
+
+              <button onClick={onApplyChanges} className="primary-btn">
+                Apply Changes
+              </button>
             </div>
           </Col>
           <Col md={8} className="item-2">
             <div className="grid-property-items">
-              {data.map((item, i) => (
-                <PropertyItem key={i} item={item} grid={true} />
-              ))}
+              {property &&
+                property.map((item, i) => (
+                  <PropertyItem key={i} item={item} grid={true} />
+                ))}
             </div>
           </Col>
         </Row>

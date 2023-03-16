@@ -10,7 +10,7 @@ const port = 5000;
 dotenv.config()
 const app = express()
 const corsOptions = {
-    origin: "http://localhost:5173",
+    origin: "http://localhost:3000",
     credentials: true, //access-control-allow-credentials:true
     optionSuccessStatus: 200,
 };
@@ -21,6 +21,8 @@ app.use(express.json());
 
 app.use('/api/v1/auth', authRoutes)
 app.use('/api/v1/property', propertyRoutes)
+
+app.use("/static", express.static("public/images"));
 
 connect()
 

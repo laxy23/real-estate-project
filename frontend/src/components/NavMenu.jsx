@@ -10,13 +10,27 @@ import Button from "@mui/material/Button";
 import { Link } from "react-router-dom";
 import { useLocation } from "react-router-dom";
 import { useEffect, useState } from "react";
+import { reset } from "../features/authSlice";
+import { useDispatch } from "react-redux";
+import { toast } from "react-hot-toast";
 
 function NavMenu() {
-  const [show, setShow] = useState(true);
+  const [show, setShow] = useState(false);
+
+  const eliteUser = JSON.parse(localStorage.getItem("eliteuser"));
 
   const [state, setState] = React.useState({
     right: false,
   });
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    if (eliteUser && eliteUser.name !== "") {
+      setShow(true);
+    } else {
+      setShow(false);
+    }
+  }, [eliteUser]);
 
   const location = useLocation();
 
@@ -30,6 +44,13 @@ function NavMenu() {
 
     setState({ ...state, [anchor]: open });
   };
+
+  const onLogout = () => {
+    localStorage.removeItem("eliteuser");
+    dispatch(reset());
+    window.location.reload();
+    toast.success("You are logged out");
+  };
   return (
     <>
       <Navbar expand="lg" id="nav">
@@ -40,7 +61,7 @@ function NavMenu() {
             </h2>
           </Navbar.Brand>
           <Stack spacing={8} direction="row">
-            {show ? (
+            {!show ? (
               <Link to="/sign-up">
                 <Button className="nav-btn" variant="outlined">
                   Login/Register
@@ -93,8 +114,12 @@ function NavMenu() {
                           Profile
                         </li>
                       </Link>
-                      {!show ? (
-                        <Button className="nav-btn" variant="outlined">
+                      {show ? (
+                        <Button
+                          className="nav-btn"
+                          onClick={onLogout}
+                          variant="outlined"
+                        >
                           Logout
                         </Button>
                       ) : (

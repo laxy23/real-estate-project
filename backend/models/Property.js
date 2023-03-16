@@ -44,7 +44,7 @@ const propertySchema = new Schema({
     description: {
         type: String,
         minlength: 100, // minimum 10 characters required
-        maxlength: 350, // maximum 200 characters allowed
+        maxlength: 550, // maximum 200 characters allowed
         require: [true, 'Property must have a description'],
     },
     user: {

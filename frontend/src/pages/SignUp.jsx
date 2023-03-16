@@ -1,7 +1,7 @@
 import first from "../photos/firsts.jpg";
 import second from "../photos/seconds.jpg";
 import thirds from "../photos/thirds.jpg";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Row, Col } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import { MdOutlineHomeWork } from "react-icons/md";
@@ -19,8 +19,34 @@ import RadioGroup from "@mui/material/RadioGroup";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import FormLabel from "@mui/material/FormLabel";
 import Carousel from "react-bootstrap/Carousel";
+import { register, reset } from "../features/authSlice";
+import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import toast from "react-hot-toast";
+import Spinner from "../components/utils/Spinner";
 
 function SignUp() {
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    password: "",
+    gender: "male",
+  });
+
+  const { name, email, password, gender } = formData;
+
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  const { user, isLoading, isError, isSuccess } = useSelector(
+    (state) => state.auth
+  );
+
+  const notify = (info) =>
+    toast.success(info, {
+      id: "signup",
+    });
+
   const [showPassword, setShowPassword] = useState(false);
 
   const handleClickShowPassword = () => setShowPassword((show) => !show);
@@ -28,6 +54,42 @@ function SignUp() {
   const handleMouseDownPassword = (event) => {
     event.preventDefault();
   };
+
+  useEffect(() => {
+    if (isError) {
+      notify("Something went wrong!");
+    }
+
+    if (isSuccess || user) {
+      notify("User has been created!");
+      navigate("/");
+    }
+
+    dispatch(reset());
+  }, [dispatch, isError, isSuccess, user, navigate]);
+
+  const onChange = (e) => {
+    setFormData((prevState) => ({
+      ...prevState,
+      [e.target.name ? e.target.name : e.target.id]: e.target.value,
+    }));
+  };
+
+  const onSubmit = (e) => {
+    e.preventDefault();
+
+    if (formData) {
+      try {
+        dispatch(register(formData));
+      } catch (error) {
+        console.log(error);
+      }
+    }
+  };
+
+  if (isLoading) {
+    return <Spinner />;
+  }
 
   return (
     <section id="signup">
@@ -43,6 +105,7 @@ function SignUp() {
           </p>
           <Box
             component="form"
+            onSubmit={onSubmit}
             sx={{
               "& > :not(style)": { m: 1, width: "25ch" },
             }}
@@ -52,15 +115,19 @@ function SignUp() {
           >
             <TextField
               className="w-70"
-              id="standard-basic"
               label="Name"
               variant="standard"
+              name="name"
+              value={name}
+              onChange={onChange}
             />
             <TextField
               className="w-70"
-              id="standard-basic"
               label="Email"
               variant="standard"
+              name="email"
+              value={email}
+              onChange={onChange}
             />
             <FormControl
               sx={{ m: 1, width: "25ch" }}
@@ -73,6 +140,9 @@ function SignUp() {
               <Input
                 id="standard-adornment-password"
                 type={showPassword ? "text" : "password"}
+                value={password}
+                name="password"
+                onChange={onChange}
                 endAdornment={
                   <InputAdornment position="end">
                     <IconButton
@@ -95,8 +165,11 @@ function SignUp() {
             <RadioGroup
               row
               aria-labelledby="demo-row-radio-buttons-group-label"
-              name="row-radio-buttons-group"
+              name="gender"
               className="w-70"
+              id="gender"
+              value={gender}
+              onChange={onChange}
             >
               <FormControlLabel
                 value="female"
@@ -105,6 +178,11 @@ function SignUp() {
               />
               <FormControlLabel value="male" control={<Radio />} label="Male" />
             </RadioGroup>
+            <div className="button-container">
+              <button className="primary-btn" type="submit">
+                Submit
+              </button>
+            </div>
             <p className="w-70 redirect">
               Don't have an account?{" "}
               <span>

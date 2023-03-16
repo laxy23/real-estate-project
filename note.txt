@@ -1,0 +1,238 @@
+Namjesitit sve filtere na All Properties stranici
+Dodati create property button na profile page-u, omoguciti useru da kreira svoj Properties
+Na home stranici namjestiti search da radi
+Uraditi property detail stranicu
+
+            const optionalParams = [
+                {
+                    field: min,
+                    prop: minPrice,
+                    operator: "$gte",
+                    propertyField: "price"
+                },
+                {
+                    field: "max",
+                    prop: max,
+                    operator: "$lte",
+                    propertyField: "price"
+                },
+                {
+                    field: "maxBed",
+                    prop: maxBedrooms,
+                    operator: "$lte",
+                    propertyField: "bedrooms"
+                },
+                {
+                    field: "minBed",
+                    prop: minBedrooms,
+                    operator: "$gte",
+                    propertyField: "bedrooms"
+                },
+                {
+                    field: "minBathrooms",
+                    prop: minBathRooms,
+                    operator: "$gte",
+                    propertyField: "bedrooms"
+                },
+                {
+                    field: "maxBathrooms",
+                    prop: maxBathrooms,
+                    operator: "$lte",
+                    propertyField: "bedrooms"
+                },
+                {
+                    field: "[excludeLocations]",
+                    prop: excludeLocations,
+                    operator: "$nin",
+                    propertyField: "location"
+                },
+                // add more optional parameters here if needed
+            ];
+
+            const propPipeline = [];
+
+            console.log(optionalParams[0].prop)
+
+            optionalParams.forEach(param => {
+                if (req.query[param.field]) {
+                    console.log(`Processing ${param.field} parameter: ${req.query[param.field]}`);
+                    const stage = {
+                        $match: {}
+                    };
+                    stage.$match[param.propertyField] = {};
+                    stage.$match[param.propertyField][param.operator] = req.query[param.field];
+                    console.log("Pipeline stage:", stage);
+                    propPipeline.push(stage);
+                }
+            });
+
+            console.log(propPipeline)
+
+            // console.log(min, max)
+            // const prop = await Property.aggregate([
+            //     {
+            //         $match: {
+            //             price: { $gte: min, $lte: max },
+            //             location: { $nin: [excludeLocations] },
+            //             type : type,
+            //             category: category,
+            //             bedrooms: { $gte: minBedrooms, $lte: maxBedrooms },
+            //             bathrooms: { $gte: minBathRooms, $lte: maxBathrooms },
+            //         },
+            //     },
+            // ])
+
+            const index = bath.indexOf(e.target.name);
+    if (index > -1) {
+      bath.splice(index, 1);
+      if (!bath.includes("6+")) {
+        // Parse the strings to extract the numbers
+        const value = calculateMinandMax(bath);
+
+        console.log(value);
+        if (bath.length !== 0) {
+        }
+      }
+    } else {
+      bath.push(e.target.name);
+
+      if (!bath.includes("6+")) {
+        // Parse the strings to extract the numbers
+        const value = calculateMinandMax(bath);
+
+        console.log(value);
+
+        if (bath.length !== 0) {
+          setRoomType({
+            minBath: value[1],
+            maxBath: value[0],
+          });
+        }
+      }
+    }
+
+    console.log(bath);
+
+
+      const calculateMinandMax = (number) => {
+    const numbers = number.map((num) => num.split("-").map(Number)).flat();
+
+    const largest = Math.max(numbers);
+    const smallest = Math.min(numbers);
+
+    return [largest, smallest];
+  };
+
+
+Zavrisiti sa filterom na backend strani, namjestiti sve. Krenuti sa izradom propertyDetail stranice i sellProperty stranice
+
+  // Split the string into an array of number ranges
+                // const beds = req.query.bed.split(',');
+
+                // // Convert each range into an array of numbers and flatten it into a single array
+                // const numbers = beds
+                //     .map((range) => range.split('-').map(Number))
+                //     .flat();
+
+                // // Get the minimum and maximum values from the array of numbers
+                // const minValue = Math.min(...numbers);
+                // const maxValue = Math.max(...numbers);
+
+                // minBed = minValue // Output: 1
+                // maxBed = maxValue // Output: 6
+
+http://api.positionstack.com/v1/forward?access_key=1f1ca6a8b0ecf47aa0fbe1c8a9a3bf97&query=Sarajevo, 13
+
+
+Lorem ipsum dolor sit amet consectetur adipisicing elit. Sapiente enim quae laborum rerum neque, voluptate aperiam maiores labore ratione fugit ipsam ut. Modi quaerat magni, nihil, similique reiciendis tempora tenetur, quisquam inventore corrupti nisi aliquid!
+
+
+
+
+OSTALO_________
+Na Home stranici dakle prikazati sve propertije, napraviti funkcionalnim search bar.
+Na Profile stranici smisliti kako prikazati userove postove
+Na Sell Your property rijesiti bug sa inputima, sa toastom.
+
+  const data = [
+    {
+      id: 1,
+      image: r1,
+      price: "75,000",
+      title: "Luxy House Brand new",
+      bedroom: 4,
+      bathroom: 3,
+      type: "House",
+      categorie: "For Rent",
+    },
+    {
+      id: 2,
+      image: r2,
+      price: "195,000",
+      title: "The Awani Residence 3",
+      bedroom: 6,
+      bathroom: 4,
+      type: "Villa",
+      categorie: "For Sale",
+    },
+    {
+      id: 3,
+      image: r3,
+      price: "65,000",
+      title: "Gold Coast Sea View",
+      bedroom: 6,
+      bathroom: 5,
+      type: "Apartment",
+      categorie: "For Sale",
+    },
+    {
+      id: 4,
+      image: r4,
+      price: "45,000",
+      title: "CitraLand BSB City Center",
+      bedroom: 3,
+      bathroom: 1,
+      type: "Apartment",
+      categorie: "For Sale",
+    },
+    {
+      id: 5,
+      image: r5,
+      price: "80,000",
+      title: "AURORA Bukit Rancamayan",
+      bedroom: 3,
+      bathroom: 2,
+      type: "House",
+      categorie: "For Rent",
+    },
+    {
+      id: 6,
+      image: r6,
+      price: "60,000",
+      title: "Cluster Persada 3",
+      bedroom: 3,
+      bathroom: 1,
+      type: "House",
+      categorie: "For Sale",
+    },
+    {
+      id: 7,
+      image: r7,
+      price: "50,000",
+      title: "Amartha Residence, Jaya...",
+      bedroom: 3,
+      bathroom: 2,
+      type: "House",
+      categorie: "For Rent",
+    },
+    {
+      id: 8,
+      image: r8,
+      price: "49,000",
+      title: "Citiland Cibur Cillenguse",
+      bedroom: 4,
+      bathroom: 2,
+      type: "House",
+      categorie: "For Sale",
+    },
+  ];

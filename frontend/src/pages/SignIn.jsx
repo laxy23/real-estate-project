@@ -1,9 +1,9 @@
 import first from "../photos/firsts.jpg";
 import second from "../photos/seconds.jpg";
 import thirds from "../photos/thirds.jpg";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Row, Col } from "react-bootstrap";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { MdOutlineHomeWork } from "react-icons/md";
 import Box from "@mui/material/Box";
 import IconButton from "@mui/material/IconButton";
@@ -15,8 +15,42 @@ import InputLabel from "@mui/material/InputLabel";
 import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import Carousel from "react-bootstrap/Carousel";
+import toast from "react-hot-toast";
+import { login, reset } from "../features/authSlice";
+import { useDispatch, useSelector } from "react-redux";
+import Spinner from "../components/utils/Spinner";
 
 function SignIn() {
+  const [formData, setFormData] = useState({
+    email: "",
+    password: "",
+  });
+
+  const { email, password } = formData;
+
+  const { user, isLoading, isError, isSuccess } = useSelector(
+    (state) => state.auth
+  );
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    if (isError) {
+      toast.error("Wrong email or password", {
+        id: "signinError",
+      });
+    }
+
+    if (isSuccess || user) {
+      toast.success("You are logged in", {
+        id: "signinSuccess",
+      });
+      navigate("/");
+    }
+
+    dispatch(reset());
+  }, [dispatch, isError, isSuccess, user, navigate]);
+
   const [showPassword, setShowPassword] = useState(false);
 
   const handleClickShowPassword = () => setShowPassword((show) => !show);
@@ -24,6 +58,29 @@ function SignIn() {
   const handleMouseDownPassword = (event) => {
     event.preventDefault();
   };
+
+  const onChange = (e) => {
+    setFormData((prevState) => ({
+      ...prevState,
+      [e.target.name]: e.target.value,
+    }));
+  };
+
+  const onSubmit = (e) => {
+    e.preventDefault();
+
+    if (formData) {
+      try {
+        dispatch(login(formData));
+      } catch (error) {
+        console.log(error);
+      }
+    }
+  };
+
+  if (isLoading) {
+    return <Spinner />;
+  }
 
   return (
     <section id="signup">
@@ -36,6 +93,7 @@ function SignIn() {
           <p>Log into your account and start with great expirience.</p>
           <Box
             component="form"
+            onSubmit={onSubmit}
             sx={{
               "& > :not(style)": { m: 1, width: "25ch" },
             }}
@@ -48,16 +106,22 @@ function SignIn() {
               id="standard-basic"
               label="Email"
               variant="standard"
+              name="email"
+              value={email}
+              onChange={onChange}
             />
             <FormControl
               sx={{ m: 1, width: "25ch" }}
               variant="standard"
               className="w-70"
+              value={password}
+              onChange={onChange}
             >
               <InputLabel htmlFor="standard-adornment-password">
                 Password
               </InputLabel>
               <Input
+                name="password"
                 id="standard-adornment-password"
                 type={showPassword ? "text" : "password"}
                 endAdornment={
@@ -73,6 +137,11 @@ function SignIn() {
                 }
               />
             </FormControl>
+            <div className="button-container">
+              <button className="primary-btn" type="submit">
+                Submit
+              </button>
+            </div>
             <p className="w-70 redirect">
               Already have an account?{" "}
               <span>

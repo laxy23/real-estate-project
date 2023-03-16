@@ -12,17 +12,24 @@ import r8 from "../photos/r8.jpg";
 import { FaMapMarkerAlt, FaBath } from "react-icons/fa";
 import { IoIosBed } from "react-icons/io";
 import { MdMeetingRoom } from "react-icons/md";
-import {
-  BsArrowRightSquareFill,
-  BsFillArrowLeftSquareFill,
-} from "react-icons/bs";
 import { BiArea } from "react-icons/bi";
 import Button from "@mui/material/Button";
 import { MapContainer, TileLayer, Popup, Marker } from "react-leaflet";
 import PropertyItem from "../components/utils/PropertyItem";
 import Slider from "react-slick";
+import {
+  getSingleProperty,
+  getPropertyLocation,
+  getSimilarProperty,
+  reset,
+} from "../features/propertySlice";
+import { useSelector, useDispatch } from "react-redux";
+import { useEffect, useState } from "react";
+import Spinner from "../components/utils/Spinner";
+import { useParams } from "react-router-dom";
 
 function PropertyDetails() {
+  const [rooms, setRooms] = useState();
   const options = {
     autoPlay: true,
     stopOnHover: true,
@@ -47,8 +54,6 @@ function PropertyDetails() {
     autoplay: true,
     speed: 3000,
     autoplaySpeed: 4000,
-    nextArrow: <BsArrowRightSquareFill />,
-    prevArrow: <BsFillArrowLeftSquareFill />,
     responsive: [
       {
         breakpoint: 1024,
@@ -159,56 +164,110 @@ function PropertyDetails() {
       categorie: "For Sale",
     },
   ];
+
+  const URL = "http://localhost:5000/static/";
+
+  const params = useParams();
+  const dispatch = useDispatch();
+  const {
+    coordinates,
+    similarProperty,
+    property,
+    isSuccess,
+    isError,
+    isLoading,
+  } = useSelector((state) => state.property);
+
+  const lat = coordinates?.data[0].latitude;
+  const lng = coordinates?.data[0].longitude;
+
+  useEffect(() => {
+    if (isError) {
+      console.log(isError);
+    }
+
+    dispatch(getSingleProperty(params.id));
+
+    dispatch(reset);
+  }, [dispatch, params, isError]);
+
+  const sumRooms = () => {
+    const num1 = property ? property.bedrooms * 1 : "";
+    const num2 = property ? property.bathrooms * 1 : "";
+
+    const sum = num1 + num2;
+
+    setRooms(sum);
+  };
+
+  useEffect(() => {
+    if (isSuccess) {
+      dispatch(getPropertyLocation(property.location));
+    }
+    sumRooms();
+
+    if (property) {
+      dispatch(getSimilarProperty(property.type));
+      console.log(similarProperty);
+    }
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isSuccess]);
+
+  if (
+    isLoading ||
+    !property ||
+    lat === undefined ||
+    lng === undefined ||
+    !similarProperty
+  ) {
+    return <Spinner />;
+  }
+
   return (
     <section id="property-detail" className="mb-6">
       <Container>
         <Row>
           <Col md={6}>
             <h3 className="property-title">
-              CitraLand BSB City Center,
+              {property?.propertyName},
               <span className="location">
-                <FaMapMarkerAlt /> Sarajevo
+                <FaMapMarkerAlt /> {property?.location}
               </span>
             </h3>
-            <Carousel {...options}>
-              <div>
-                <img alt="property-1" src={r1} />
-              </div>
-              <div>
-                <img alt="property-2" src={r2} />
-              </div>
-              <div>
-                <img alt="property-3" src={r3} />
-              </div>
-            </Carousel>
+            {property ? (
+              <Carousel {...options}>
+                {property?.photos.map((img, i) => (
+                  <div key={i}>
+                    <img src={`${URL}/${img}`} alt={`property-${img}`} />
+                  </div>
+                ))}
+              </Carousel>
+            ) : (
+              ""
+            )}
           </Col>
           <Col md={6} className="item-2">
             <div className="desc">
               <h3>Description</h3>
-              <p>
-                Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                Sapiente enim quae laborum rerum neque, voluptate aperiam
-                maiores labore ratione fugit ipsam ut. Modi quaerat magni,
-                nihil, similique reiciendis tempora tenetur, quisquam inventore
-                corrupti nisi aliquid!
-              </p>
+              <p>{property?.description}</p>
             </div>
             <div className="property-icon-container">
               <div className="property-icon-item">
                 <IoIosBed />
-                <h4>3 Beds</h4>
+                <h4>{property?.bedrooms} Beds</h4>
               </div>
               <div className="property-icon-item">
                 <FaBath />
-                <h4>2 Bath</h4>
+                <h4>{property?.bathrooms} Bath</h4>
               </div>
               <div className="property-icon-item">
                 <MdMeetingRoom />
-                <h4>5 Rooms</h4>
+                <h4>{rooms} Rooms</h4>
               </div>
               <div className="property-icon-item">
                 <BiArea />
-                <h4>200 m²</h4>
+                <h4>{property?.area} m²</h4>
               </div>
             </div>
             <div className="button-container">
@@ -217,14 +276,14 @@ function PropertyDetails() {
               </Button>
             </div>
             <div className="price-container">
-              <h3>$75, 000</h3>
+              <h3>$ {property?.price}</h3>
             </div>
           </Col>
           <Col md={12} className="item item-3">
             <h3>Map</h3>
             <MapContainer
               id="map"
-              center={[43.84864, 18.35644]}
+              center={[lat, lng]}
               zoom={13}
               scrollWheelZoom={false}
             >
@@ -232,7 +291,7 @@ function PropertyDetails() {
                 attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
                 url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
               />
-              <Marker position={[43.84864, 18.35644]}>
+              <Marker position={[lat, lng]}>
                 <Popup>
                   A pretty CSS3 popup. <br /> Easily customizable.
                 </Popup>
@@ -242,7 +301,7 @@ function PropertyDetails() {
           <Col md={12} className="item item-4">
             <h3>Similar Properties</h3>
             <Slider {...settings}>
-              {data.map((item, i) => (
+              {similarProperty.map((item, i) => (
                 <PropertyItem key={i} item={item} grid={true} />
               ))}
             </Slider>

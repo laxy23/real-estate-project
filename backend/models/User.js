@@ -24,7 +24,7 @@ const userSchema = new Schema({
         default: false,
     },
     properties: {
-        type: mongoose.Schema.Types.ObjectId,
+        type: [mongoose.Schema.Types.ObjectId],
         ref: 'Property'
     }
 }, {
