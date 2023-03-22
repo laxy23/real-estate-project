@@ -8,6 +8,14 @@ const getAll = async () => {
   return res.data.property;
 };
 
+const getAllPosts = async () => {
+  const res = await axios.get(`${API_URL}/get/posts`, {
+    withCredentials: true,
+  });
+
+  return res.data.property;
+};
+
 const getByFilter = async (url) => {
   const res = await axios.get(`${API_URL}?${url}`);
 
@@ -21,10 +29,8 @@ const getSingle = async (url) => {
 };
 
 const getSimilar = async (type) => {
-  console.log(type);
   const res = await axios.get(`${API_URL}/type/${type}`);
 
-  console.log(res.data);
   return res.data.property;
 };
 
@@ -50,6 +56,7 @@ const propertyService = {
   getSingle,
   getLocation,
   getSimilar,
+  getAllPosts,
 };
 
 export default propertyService;

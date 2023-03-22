@@ -62,7 +62,7 @@ function NavMenu() {
           </Navbar.Brand>
           <Stack spacing={8} direction="row">
             {!show ? (
-              <Link to="/sign-up">
+              <Link to="/sign-up" className="lg-btn">
                 <Button className="nav-btn" variant="outlined">
                   Login/Register
                 </Button>
@@ -84,16 +84,16 @@ function NavMenu() {
                     <h3>Navigation Menu</h3>
 
                     <ul>
-                      <Link
-                        to="/"
+                      <a
+                        href="/"
                         className={location.pathname === "/" ? "set-bold" : ""}
                       >
                         <li>
                           <MdOutlineHomeWork /> <span>Home</span>
                         </li>
-                      </Link>
-                      <Link
-                        to="/properties"
+                      </a>
+                      <a
+                        href="/properties"
                         className={
                           location.pathname === "/properties" ? "set-bold" : ""
                         }
@@ -102,7 +102,7 @@ function NavMenu() {
                           <FaCity />
                           All Properties
                         </li>
-                      </Link>
+                      </a>
                       <Link
                         to="/profile"
                         className={
@@ -114,6 +114,15 @@ function NavMenu() {
                           Profile
                         </li>
                       </Link>
+                      {!show ? (
+                        <Link to="/sign-up">
+                          <Button className="nav-btn" variant="outlined">
+                            Login/Register
+                          </Button>
+                        </Link>
+                      ) : (
+                        ""
+                      )}
                       {show ? (
                         <Button
                           className="nav-btn"

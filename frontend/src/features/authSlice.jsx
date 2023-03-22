@@ -47,6 +47,19 @@ export const getMyProperties = createAsyncThunk(
   }
 );
 
+export const deleteMyProperty = createAsyncThunk(
+  "auth/deleteMyProperty",
+  async (propertyId, thunkAPI) => {
+    try {
+      return await authService.deleteProperty(propertyId);
+    } catch (error) {
+      console.log(error);
+      const msg = error.response.data.message;
+      return thunkAPI.rejectWithValue(msg);
+    }
+  }
+);
+
 export const authSlice = createSlice({
   name: "auth",
   initialState,
@@ -97,6 +110,18 @@ export const authSlice = createSlice({
         state.isLoading = false;
         state.isError = true;
         state.userProperty = null;
+      })
+      .addCase(deleteMyProperty.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(deleteMyProperty.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.isSuccess = true;
+        state.userProperty = action.payload;
+      })
+      .addCase(deleteMyProperty.rejected, (state) => {
+        state.isLoading = false;
+        state.isError = true;
       });
   },
 });

@@ -1,14 +1,6 @@
 import { Row, Col, Container } from "react-bootstrap";
 import "react-responsive-carousel/lib/styles/carousel.min.css"; // requires a loader
 import { Carousel } from "react-responsive-carousel";
-import r1 from "../photos/r1.jpg";
-import r2 from "../photos/r2.jpg";
-import r3 from "../photos/r3.jpg";
-import r4 from "../photos/r4.jpg";
-import r5 from "../photos/r5.jpg";
-import r6 from "../photos/r6.jpg";
-import r7 from "../photos/r7.jpg";
-import r8 from "../photos/r8.jpg";
 import { FaMapMarkerAlt, FaBath } from "react-icons/fa";
 import { IoIosBed } from "react-icons/io";
 import { MdMeetingRoom } from "react-icons/md";
@@ -82,89 +74,6 @@ function PropertyDetails() {
     ],
   };
 
-  const data = [
-    {
-      id: 1,
-      image: r1,
-      price: "75,000",
-      title: "Luxy House Brand new",
-      bedroom: 4,
-      bathroom: 3,
-      type: "House",
-      categorie: "For Rent",
-    },
-    {
-      id: 2,
-      image: r2,
-      price: "195,000",
-      title: "The Awani Residence 3",
-      bedroom: 6,
-      bathroom: 4,
-      type: "Villa",
-      categorie: "For Sale",
-    },
-    {
-      id: 3,
-      image: r3,
-      price: "65,000",
-      title: "Gold Coast Sea View",
-      bedroom: 6,
-      bathroom: 5,
-      type: "Apartment",
-      categorie: "For Sale",
-    },
-    {
-      id: 4,
-      image: r4,
-      price: "45,000",
-      title: "CitraLand BSB City Center",
-      bedroom: 3,
-      bathroom: 1,
-      type: "Apartment",
-      categorie: "For Sale",
-    },
-    {
-      id: 5,
-      image: r5,
-      price: "80,000",
-      title: "AURORA Bukit Rancamayan",
-      bedroom: 3,
-      bathroom: 2,
-      type: "House",
-      categorie: "For Rent",
-    },
-    {
-      id: 6,
-      image: r6,
-      price: "60,000",
-      title: "Cluster Persada 3",
-      bedroom: 3,
-      bathroom: 1,
-      type: "House",
-      categorie: "For Sale",
-    },
-    {
-      id: 7,
-      image: r7,
-      price: "50,000",
-      title: "Amartha Residence, Jaya...",
-      bedroom: 3,
-      bathroom: 2,
-      type: "House",
-      categorie: "For Rent",
-    },
-    {
-      id: 8,
-      image: r8,
-      price: "49,000",
-      title: "Citiland Cibur Cillenguse",
-      bedroom: 4,
-      bathroom: 2,
-      type: "House",
-      categorie: "For Sale",
-    },
-  ];
-
   const URL = "http://localhost:5000/static/";
 
   const params = useParams();
@@ -208,7 +117,6 @@ function PropertyDetails() {
 
     if (property) {
       dispatch(getSimilarProperty(property.type));
-      console.log(similarProperty);
     }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -302,7 +210,7 @@ function PropertyDetails() {
             <h3>Similar Properties</h3>
             <Slider {...settings}>
               {similarProperty.map((item, i) => (
-                <PropertyItem key={i} item={item} grid={true} />
+                <PropertyItem key={i} item={item} slider={true} />
               ))}
             </Slider>
           </Col>

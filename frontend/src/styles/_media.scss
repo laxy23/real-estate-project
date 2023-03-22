@@ -1,2 +1,144 @@
 @import "variables";
 @import "utilities";
+
+@media (max-width: 1400px) {
+  #signin {
+    .item-1 {
+      padding-top: 5rem;
+    }
+  }
+}
+
+@media (max-width: 1200px) {
+  .css-2m9kme-MuiFormControl-root {
+    max-width: -webkit-fill-available;
+  }
+  #all-properties {
+    .item-2 {
+      .grid-property-items {
+        grid-template-columns: repeat(2, 1fr);
+      }
+      .property-content {
+        height: unset;
+      }
+    }
+  }
+}
+
+@media (max-width: 992px) {
+  #signin,
+  #signup {
+    .item-1 {
+      padding-top: 0rem;
+    }
+    .item-2 {
+      display: none;
+    }
+  }
+  #all-properties {
+    .item-2 {
+      .grid-property-items {
+        grid-template-columns: repeat(1, 1fr) !important;
+      }
+      .property-content {
+        height: unset !important;
+      }
+    }
+  }
+  #profile {
+    .profile-content {
+      img {
+        width: 149px;
+      }
+    }
+  }
+  #sell-property {
+    .text-field {
+      width: 80%;
+    }
+  }
+}
+@media (max-width: 768px) {
+  #signup {
+    margin-bottom: 3rem;
+  }
+  #header {
+    .item-1 {
+      .input-container {
+        display: none;
+      }
+    }
+  }
+  #all-properties {
+    .item-1 {
+      display: none;
+    }
+    .item-2 {
+      .grid-property-items {
+        grid-template-columns: repeat(2, 1fr) !important;
+      }
+    }
+  }
+  #profile {
+    .profile-content {
+      width: auto;
+    }
+    .item-2 {
+      display: none;
+    }
+  }
+}
+@media (max-width: 576px) {
+  .lg-btn {
+    display: none;
+  }
+  .navBtn {
+    margin-right: 1rem;
+  }
+  .css-1k3mx5y-MuiStack-root > :not(style) + :not(style) {
+    margin-left: 13px !important;
+  }
+  #signup {
+    .item-1 {
+      p {
+        padding-right: 2rem;
+      }
+    }
+  }
+  #profile {
+    .property-item {
+      .property-content {
+        height: unset;
+      }
+    }
+  }
+  .css-1160xiw-MuiPaper-root-MuiDrawer-paper {
+    width: 235px;
+    overflow-x: hidden;
+  }
+  #my-menu {
+    button {
+      width: fit-content;
+    }
+  }
+  #all-properties {
+    .item-2 {
+      .grid-property-items {
+        grid-template-columns: repeat(1, 1fr) !important;
+      }
+    }
+  }
+  #property-detail {
+    .item-2 {
+      .price-container {
+        right: 50px;
+      }
+      .property-icon-container {
+        gap: 2rem;
+      }
+      .button-container {
+        margin-bottom: 2rem;
+      }
+    }
+  }
+}

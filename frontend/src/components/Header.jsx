@@ -5,6 +5,7 @@ import { BsHouseDoor } from "react-icons/bs";
 import { GiVikingLonghouse } from "react-icons/gi";
 import TextField from "@mui/material/TextField";
 import MenuItem from "@mui/material/MenuItem";
+import { Link } from "react-router-dom";
 
 function Header() {
   const cities = [
@@ -95,7 +96,7 @@ function Header() {
       <div className="overlay"></div>
       <Container>
         <Row>
-          <Col md={12} className="item-1">
+          <Col md={12} sm={12} className="item-1">
             <div className="text-container">
               <h2>Discover a place you will love to live!</h2>
               <p>
@@ -166,9 +167,9 @@ function Header() {
                 </TextField>
               </div>
               <div className="search-icon">
-                <button className="search-btn">
+                <Link to="/properties" className="search-btn">
                   <FaSearchLocation />
-                </button>
+                </Link>
               </div>
             </div>
             <div className="number-container">

@@ -94,7 +94,7 @@ function SignUp() {
   return (
     <section id="signup">
       <Row>
-        <Col md={5} className="item-1">
+        <Col md={9} lg={5} className="item-1">
           <h2>
             <MdOutlineHomeWork /> <span>Elite Homes</span>
           </h2>

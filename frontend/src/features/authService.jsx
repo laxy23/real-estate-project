@@ -32,10 +32,19 @@ const getMyProperty = async () => {
   return res.data.property;
 };
 
+const deleteProperty = async (propertyId) => {
+  const res = await axios.delete(`${API_URL}/delete/${propertyId}`, {
+    withCredentials: true,
+  });
+
+  return res.data.property;
+};
+
 const authService = {
   register,
   login,
   getMyProperty,
+  deleteProperty,
 };
 
 export default authService;

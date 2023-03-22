@@ -150,9 +150,8 @@ Lorem ipsum dolor sit amet consectetur adipisicing elit. Sapiente enim quae labo
 
 
 OSTALO_________
-Na Home stranici dakle prikazati sve propertije, napraviti funkcionalnim search bar.
-Na Profile stranici smisliti kako prikazati userove postove
-Na Sell Your property rijesiti bug sa inputima, sa toastom.
+Uraditi responsive do kraja
+Uploudovati sve na neki hosting
 
   const data = [
     {

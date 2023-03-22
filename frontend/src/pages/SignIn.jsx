@@ -83,9 +83,9 @@ function SignIn() {
   }
 
   return (
-    <section id="signup">
+    <section id="signin">
       <Row>
-        <Col md={5} className="item-1">
+        <Col md={9} lg={5} className="item-1">
           <h2>
             <MdOutlineHomeWork /> <span>Elite Homes</span>
           </h2>
@@ -150,7 +150,7 @@ function SignIn() {
             </p>
           </Box>
         </Col>
-        <Col md={7} className="item-2">
+        <Col md={7} lg={7} className="item-2">
           <Carousel fade interval={5000}>
             <Carousel.Item>
               <img className="d-block w-100" src={first} alt="First slide" />

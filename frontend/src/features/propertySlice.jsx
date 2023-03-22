@@ -4,7 +4,9 @@ import propertyService from "./propertyService";
 const initialState = {
   property: null,
   similarProperty: null,
+  myProperties: null,
   coordinates: null,
+  posts: null,
   isError: false,
   isSuccess: false,
   isLoading: false,
@@ -14,7 +16,6 @@ export const createProperty = createAsyncThunk(
   "property/create",
   async (data, thunkAPI) => {
     try {
-      console.log(data);
       return await propertyService.createProperty(data);
     } catch (error) {
       console.log(error);
@@ -29,6 +30,19 @@ export const getAllProperties = createAsyncThunk(
   async (thunkAPI) => {
     try {
       return await propertyService.getAll();
+    } catch (error) {
+      console.log(error);
+      const msg = error.response.data.message;
+      return thunkAPI.rejectWithValue(msg);
+    }
+  }
+);
+
+export const getAllPosts = createAsyncThunk(
+  "property/getAllPosts",
+  async (thunkAPI) => {
+    try {
+      return await propertyService.getAllPosts();
     } catch (error) {
       console.log(error);
       const msg = error.response.data.message;
@@ -81,6 +95,19 @@ export const getPropertyLocation = createAsyncThunk(
   async (location, thunkAPI) => {
     try {
       return await propertyService.getLocation(location);
+    } catch (error) {
+      console.log(error);
+      const msg = error.response.data.message;
+      return thunkAPI.rejectWithValue(msg);
+    }
+  }
+);
+
+export const getMyProperties = createAsyncThunk(
+  "property/getMyProperties",
+  async (thunkAPI) => {
+    try {
+      return await propertyService.getMyProperties();
     } catch (error) {
       console.log(error);
       const msg = error.response.data.message;
@@ -173,6 +200,28 @@ export const propertySlice = createSlice({
       .addCase(getSimilarProperty.rejected, (state) => {
         state.isLoading = false;
         state.similarProperty = null;
+      })
+      .addCase(getMyProperties.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(getMyProperties.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.myProperties = action.payload;
+      })
+      .addCase(getMyProperties.rejected, (state) => {
+        state.isLoading = false;
+        state.myProperties = null;
+      })
+      .addCase(getAllPosts.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(getAllPosts.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.posts = action.payload;
+      })
+      .addCase(getAllPosts.rejected, (state) => {
+        state.isLoading = false;
+        state.posts = null;
       });
   },
 });

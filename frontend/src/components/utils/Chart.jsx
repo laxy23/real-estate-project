@@ -34,18 +34,23 @@ export const options = {
 
 const labels = ["January", "February", "March", "April", "May", "June", "July"];
 
-export const data = {
-  labels,
-  datasets: [
-    {
-      label: "Posts",
-      data: Data.map((data) => data.postNumber),
-      backgroundColor: "rgba(6, 103, 135, 0.5)",
-    },
-  ],
-};
-
 function Chart() {
+  const { UserData } = Data();
+
+  if (!UserData) {
+    return <h3>Loadin...</h3>;
+  }
+
+  const data = {
+    labels,
+    datasets: [
+      {
+        label: "Posts",
+        data: UserData.map((data) => data.postNumber),
+        backgroundColor: "rgba(6, 103, 135, 0.5)",
+      },
+    ],
+  };
   return <Bar options={options} data={data} />;
 }
 

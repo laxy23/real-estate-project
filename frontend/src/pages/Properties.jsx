@@ -1,19 +1,21 @@
 import { Row, Col, Container } from "react-bootstrap";
 import { useState, useEffect } from "react";
-import Box from "@mui/material/Box";
-import Slider from "@mui/material/Slider";
-import FormGroup from "@mui/material/FormGroup";
-import FormControlLabel from "@mui/material/FormControlLabel";
-import Checkbox from "@mui/material/Checkbox";
-import ListItemText from "@mui/material/ListItemText";
-import Select from "@mui/material/Select";
-import OutlinedInput from "@mui/material/OutlinedInput";
-import InputLabel from "@mui/material/InputLabel";
-import MenuItem from "@mui/material/MenuItem";
-import FormControl from "@mui/material/FormControl";
-import Paper from "@mui/material/Paper";
-import InputBase from "@mui/material/InputBase";
-import IconButton from "@mui/material/IconButton";
+import {
+  Box,
+  Slider,
+  FormGroup,
+  FormControlLabel,
+  Checkbox,
+  ListItemText,
+  Select,
+  OutlinedInput,
+  InputLabel,
+  MenuItem,
+  FormControl,
+  Paper,
+  InputBase,
+  IconButton,
+} from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
 import PropertyItem from "../components/utils/PropertyItem";
 import {
@@ -23,14 +25,6 @@ import {
 } from "../features/propertySlice";
 import { useSelector, useDispatch } from "react-redux";
 import { toast } from "react-hot-toast";
-import r1 from "../photos/r1.jpg";
-import r2 from "../photos/r2.jpg";
-import r3 from "../photos/r3.jpg";
-import r4 from "../photos/r4.jpg";
-import r5 from "../photos/r5.jpg";
-import r6 from "../photos/r6.jpg";
-import r7 from "../photos/r7.jpg";
-import r8 from "../photos/r8.jpg";
 import Spinner from "../components/utils/Spinner";
 
 const ITEM_HEIGHT = 48;
@@ -167,7 +161,6 @@ function Properties() {
     dispatch(getFilteredProperties(url));
 
     setStateValues();
-    console.log(url);
   };
 
   const searchByLocation = () => {
@@ -196,7 +189,7 @@ function Properties() {
     <section id="all-properties" className="mb-6">
       <Container>
         <Row>
-          <Col md={4} className="item-1">
+          <Col md={6} lg={4} className="item-1">
             <div className="nav-items">
               <Paper
                 component="form"
@@ -359,7 +352,7 @@ function Properties() {
               </button>
             </div>
           </Col>
-          <Col md={8} className="item-2">
+          <Col md={6} lg={8} className="item-2">
             <div className="grid-property-items">
               {property &&
                 property.map((item, i) => (

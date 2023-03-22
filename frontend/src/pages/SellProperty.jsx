@@ -16,7 +16,6 @@ import { useDispatch, useSelector } from "react-redux";
 import { createProperty, reset } from "../features/propertySlice";
 import { toast } from "react-hot-toast";
 import Spinner from "../components/utils/Spinner";
-import { useNavigate } from "react-router-dom";
 
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
@@ -49,17 +48,10 @@ function SellProperty() {
     (state) => state.property
   );
   const dispatch = useDispatch();
-  const navigate = useNavigate();
 
   useEffect(() => {
     if (isError) {
       toast.error("Can't create property");
-    }
-
-    if (isSuccess) {
-      toast.success("You just created a property", {
-        id: "sucess",
-      });
     }
     dispatch(reset());
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -121,8 +113,6 @@ function SellProperty() {
 
   const onSubmit = (e) => {
     e.preventDefault();
-
-    console.log(images[0]);
     const formData = new FormData();
     for (let i = 0; i < images.length; i++) {
       formData.append("photos", images[i]);
@@ -137,11 +127,11 @@ function SellProperty() {
     formData.append("type", homeType);
     formData.append("location", city);
 
-    for (const value of formData.values()) {
-      console.log(value);
-    }
-
     dispatch(createProperty(formData));
+
+    toast.success("You just created a property", {
+      id: "sucess",
+    });
 
     dispatch(reset());
   };
@@ -156,7 +146,7 @@ function SellProperty() {
           <div className="page-title">
             <h3>Sell Your Property</h3>
           </div>
-          <Col md={12}>
+          <Col md={12} lg={12}>
             <Box
               component="form"
               onSubmit={onSubmit}

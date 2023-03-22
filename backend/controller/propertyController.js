@@ -230,6 +230,22 @@ exports.getLocation = async (req, res, next) => {
     }
 }
 
+exports.getMyProperty = async (req, res, next) => {
+    try {
+        // Get user id
+        const userId = req.user.id;
+        // Get property where userId === user
+        const userProperty = await Property.find({ user: userId });
+        res.status(200).json({
+            success: true,
+            results: userProperty.length,
+            userProperty,
+        });
+    } catch (error) {
+        next(error);
+    }
+}
+
 exports.deleteMyProperty = async (req, res, next) => {
     try {
         const propertyId = req.params.propertyId
@@ -241,6 +257,47 @@ exports.deleteMyProperty = async (req, res, next) => {
             message: 'Property deleted successfully'
         })
 
+    } catch (error) {
+        next(error)
+    }
+}
+exports.getAllPosts = async (req, res, next) => {
+    try {
+        const property = await Property.aggregate([
+            {
+                $addFields: {
+                    month: { $month: "$createdAt" }
+                }
+            },
+            {
+                $group: {
+                    _id: { month: "$month", _id: "$_id" },
+                    count: { $sum: 1 }
+                }
+            },
+            {
+                $group: {
+                    _id: "$_id.month",
+                    result: { $push: { _id: "$_id._id", count: "$count" } },
+                    range: { $push: { _id: "$_id.month", count: 0 } }
+                }
+            },
+            {
+                $project: {
+                    _id: 0,
+                    month: "$_id",
+                    result: 1,
+                    range: 1,
+                    total: { $sum: "$result.count" }
+                }
+            }
+        ]);
+
+        res.status(200).json({
+            results: property.length,
+            success: 'true',
+            property
+        })
     } catch (error) {
         next(error)
     }

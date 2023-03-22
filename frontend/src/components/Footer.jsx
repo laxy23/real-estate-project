@@ -51,7 +51,7 @@ function Footer() {
         <div className="overlay"></div>
         <Container>
           <Row>
-            <Col md={6} className="footer-item">
+            <Col md={12} lg={6} className="footer-item">
               <h3>Find home with us</h3>
               <h2>Find the right house over 400,000 property options</h2>
               <button className="footer-btn">Find Now</button>
@@ -63,7 +63,7 @@ function Footer() {
       <section id="main-footer">
         <Container>
           <Row>
-            <Col md={6} className="item-1">
+            <Col md={6} sm={6} className="item-1">
               <h2>
                 <MdOutlineHomeWork /> <span>Elite Homes</span>
               </h2>
@@ -78,7 +78,7 @@ function Footer() {
               </div>
             </Col>
             {data.map((item) => (
-              <Col key={item.id} md={2} className="main-footer-item">
+              <Col key={item.id} md={2} sm={6} className="main-footer-item">
                 <ul>
                   {item.list.map((list, i) => (
                     <li key={i}>{list}</li>
