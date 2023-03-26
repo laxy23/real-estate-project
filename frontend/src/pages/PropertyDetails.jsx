@@ -74,7 +74,7 @@ function PropertyDetails() {
     ],
   };
 
-  const URL = "http://localhost:5000/static/";
+  const URL = "/static/";
 
   const params = useParams();
   const dispatch = useDispatch();

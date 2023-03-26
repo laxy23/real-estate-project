@@ -8,7 +8,7 @@ import { deleteMyProperty } from "../../features/authSlice";
 import { useDispatch } from "react-redux";
 
 function PropertyItem({ item, grid, icon }) {
-  const URL = "http://localhost:5000/static/";
+  const URL = "/static/";
   const [loading, isLoading] = useState(false);
   const dispatch = useDispatch();
 
