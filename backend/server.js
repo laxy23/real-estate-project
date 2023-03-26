@@ -5,6 +5,7 @@ const connect = require('./utils/connect')
 const authRoutes = require('./routes/auth')
 const propertyRoutes = require('./routes/property')
 const cookieparser = require("cookie-parser");
+const compression = require('compression');
 const path = require('path')
 dotenv.config()
 const port = process.env.PORT || 5000;
@@ -23,11 +24,14 @@ app.use('/api/v1/auth', authRoutes)
 app.use('/api/v1/property', propertyRoutes)
 
 app.use("/static", express.static("public/images"));
-app.use(express.static(path.join(__dirname, '../frontend/build')))
-app.get("*", (req, res) =>
-    res.sendFile(__dirname, "../", "frontend", "build", "index.html")
-);
+const frontendPath = path.resolve(__dirname, '../frontend/build');
 
+app.use(compression());
+app.use(express.static(frontendPath, { maxAge: '1d' }));
+
+app.get('*', (req, res) => {
+    res.sendFile(path.join(frontendPath, 'index.html'));
+});
 connect()
 
 app.use((err, req, res, next) => {
