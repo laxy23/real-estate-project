@@ -206,14 +206,6 @@ function PropertyDetails() {
               </Marker>
             </MapContainer>
           </Col>
-          <Col md={12} className="item item-4">
-            <h3>Similar Properties</h3>
-            <Slider {...settings}>
-              {similarProperty.map((item, i) => (
-                <PropertyItem key={i} item={item} slider={true} />
-              ))}
-            </Slider>
-          </Col>
         </Row>
       </Container>
     </section>
