@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "node backend/server.js && cd frontend && npm i && npm run build",
+    "start": "node backend/server.js",
     "client": "npm start --prefix frontend"
   },
   "author": "",
