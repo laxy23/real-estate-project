@@ -6,6 +6,7 @@ const Property = require('../models/Property')
 const multer = require("multer");
 const sharp = require('sharp');
 const axios = require('axios')
+const fetch = require("node-fetch");
 
 const multerStorage = multer.memoryStorage();
 
